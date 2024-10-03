@@ -103,11 +103,13 @@ export type ScrollToBottomOptions =
       preserveScrollPosition?: boolean;
 
       /**
-       * The duration in ms that this scroll event should persist for.
+       * The extra duration in ms that this scroll event should persist for.
+       * (in addition to the time that it takes to get to the bottom)
+       *
        * Not to be confused with the duration of the animation -
        * for that you should adjust the animation option.
        *
-       * @default 350
+       * @default 0
        */
       duration?: number | Promise<void>;
     };
@@ -230,8 +232,7 @@ export const useStickToBottom = (options: StickToBottomOptions = {}) => {
         durationElapsed = Date.now();
       });
     } else {
-      durationElapsed =
-        waitElapsed + (scrollOptions.duration ?? (behavior === 'instant' ? 0 : RETAIN_ANIMATION_DURATION_MS));
+      durationElapsed = waitElapsed + (scrollOptions.duration ?? 0);
     }
 
     const next = async (): Promise<boolean> => {
@@ -292,6 +293,7 @@ export const useStickToBottom = (options: StickToBottomOptions = {}) => {
           return scrollToBottom({
             animation: mergeAnimations(optionsRef.current, optionsRef.current.resize),
             ignoreEscapes,
+            duration: Math.max(0, durationElapsed - Date.now()) || undefined,
           });
         }
 
@@ -450,7 +452,12 @@ export const useStickToBottom = (options: StickToBottomOptions = {}) => {
           previousHeight ? optionsRef.current.resize : optionsRef.current.initial
         );
 
-        scrollToBottom({ animation, wait: true, preserveScrollPosition: true });
+        scrollToBottom({
+          animation,
+          wait: true,
+          preserveScrollPosition: true,
+          duration: animation === 'instant' ? undefined : RETAIN_ANIMATION_DURATION_MS,
+        });
       } else {
         /**
          * Else if it's a negative resize, check if we're near the bottom
