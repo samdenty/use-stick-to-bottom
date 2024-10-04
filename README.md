@@ -1,6 +1,6 @@
 # `useStickToBottom`
 
-> Designed with AI chat bots in mind.
+> Designed with AI chat bots in mind, [powering `bolt.new` by StackBlitz](https://bolt.new)
 
 [![npm version](https://img.shields.io/npm/v/use-stick-to-bottom.svg?style=flat-square)](https://www.npmjs.com/package/use-stick-to-bottom)
 [![npm downloads](https://img.shields.io/npm/dm/use-stick-to-bottom.svg?style=flat-square)](https://www.npmjs.com/package/use-stick-to-bottom)
